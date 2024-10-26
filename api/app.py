@@ -3,6 +3,7 @@ import cloudinary.uploader
 from flask import Flask, request, jsonify
 from playwright.sync_api import sync_playwright
 import time
+from _playwright import close_playwright,init_playwright
 
 # Configure Cloudinary
 cloudinary.config(
@@ -27,10 +28,14 @@ def upload_to_cloudinary(image_bytes):
         print(f"Error uploading to Cloudinary: {error}")
         raise
 
+import time
+
 def take_screenshot_and_upload():
-    """Automate steps and take screenshot, then upload to Cloudinary"""
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+    """Automate steps to take a screenshot, then upload to Cloudinary."""
+    playwright = init_playwright()
+    browser = None
+    try:
+        browser = playwright.chromium.launch(headless=True)
         page = browser.new_page()
 
         # Navigate to the target page
@@ -42,10 +47,10 @@ def take_screenshot_and_upload():
         textarea = page.locator(".form-control.txt_area_1")
         textarea.fill("Yasir")
 
-        # Wait a moment for fonts to load and then click on font divs
+        # Wait for font divs to load
         print("Processing font divs...")
         time.sleep(2)  # Allow time for page to load fully
-        font_divs = page.locator("div.font-div[data-path]").nth(1).all()
+        font_divs = page.locator("div.font-div[data-path]").all()
         for div in font_divs[:7]:  # Click the first 7 font divs
             div.click()
             time.sleep(0.5)
@@ -58,18 +63,25 @@ def take_screenshot_and_upload():
         time.sleep(2)  # Add delay if necessary
         screenshot_bytes = screenshot_elem.screenshot(type="png")
 
-        # Close the browser
-        browser.close()
-
         # Upload screenshot to Cloudinary
         screenshot_url = upload_to_cloudinary(screenshot_bytes)
         return {"Screenshot URL": screenshot_url}
 
-@app.route('/hey', methods=['GET'])
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return {"Error": str(e)}
+    
+    finally:
+        if browser:
+            browser.close()
+        close_playwright(playwright)
+
+@app.route('/api/hey', methods=['GET'])
 def home():
     if request.method == 'GET':
         result = take_screenshot_and_upload()
         return jsonify(result)
 
+# For local development
 if __name__ == "__main__":
-    app.run(debug=True, port=3000)
+    app.run(host='0.0.0.0', port=3000)
