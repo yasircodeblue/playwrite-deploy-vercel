@@ -1,18 +1,26 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "api/app.py",
-        "use": "@vercel/python",
-        "config": {
-          "runtime": "python3.11"
-        }
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/app.py",
+      "use": "@vercel/python",
+      "config": {
+        "runtime": "python3.11"
       }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "api/app.py"
-      }
-    ]
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/app.py"
+    }
+  ],
+  "build": {
+    "env": {
+      "PLAYWRIGHT_BROWSERS_PATH": "0"  
+    },
+    "scripts": {
+      "build": "bash vercel.build.sh" 
+    }
   }
+}
