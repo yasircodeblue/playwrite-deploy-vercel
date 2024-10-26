@@ -1,4 +1,0 @@
-Flask>=2.3.3
-cloudinary==1.32.0
-playwright==1.38.0
-greenlet==2.0.2
