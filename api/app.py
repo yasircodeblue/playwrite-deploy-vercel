@@ -65,7 +65,7 @@ def take_screenshot_and_upload():
         screenshot_url = upload_to_cloudinary(screenshot_bytes)
         return {"Screenshot URL": screenshot_url}
 
-@app.route('/', methods=['GET'])
+@app.route('/hey', methods=['GET'])
 def home():
     if request.method == 'GET':
         result = take_screenshot_and_upload()
