@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 from playwright.sync_api import sync_playwright
 import time
-
+import os
+import subprocess
 # Configure Imgbb
-
+subprocess.run(["python3", "install_playwright.py"])
 app = Flask(__name__)
 
 def take_screenshot_and_upload():
