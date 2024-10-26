@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+cloudinary = "==1.32.0"
+playwright = "==1.38.0"
+greenlet = "==2.0.2"
+
+[requires]
+python_version = "3.12"
