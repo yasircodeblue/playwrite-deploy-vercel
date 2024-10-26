@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
-cloudinary = "==1.32.0"
+cloudinary = "*"
 playwright = "==1.38.0"
 
 [requires]
